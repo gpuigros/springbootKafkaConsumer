@@ -1,0 +1,14 @@
+# THIS FILE SHOULD NOT BE EDITED
+# ALL APPLICATION CONFIGURATION MUST BE IN CONFIG SERVER
+
+spring:
+  application:
+    name: kafkaConsumer
+  profiles:
+    active: local
+
+management:
+  context-path: /manage
+  security:
+    enabled: false
+

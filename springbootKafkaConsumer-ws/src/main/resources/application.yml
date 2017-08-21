@@ -1,0 +1,73 @@
+# THIS FILE SHOULD NOT BE EDITED
+# ALL APPLICATION CONFIGURATION MUST BE IN CONFIG SERVER
+# THIS FILE ONLY CONTAINS "STRUCTURAL" CONFIGURATION AND MUST NOT BE CHANGED
+
+info:
+  version: 1.0
+  title: hazelcastTaskDistributor
+server:
+  port: 8082
+endpoints:
+  enabled: true
+  env:
+    enabled: true
+  restart:
+    enabled: true
+    sensitive: false
+  shutdown:
+    enabled: true
+  health:
+    enabled: true
+    sensitive: false
+  mappings:
+    enabled: true
+
+# Swagger specification path
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api-docs
+
+# Jackson serialization library: date serialization configuration
+jackson:
+  serialization:
+    write_dates_as_timestamps: false
+management:
+  context-path: /manage
+  security:
+    enabled: false
+spring:
+  profiles: local
+  cloud:
+    stream:
+      kafka:
+        bindings:
+          inputHotelsChannel:
+            consumer:
+              enable-dlq: true
+        binder:
+          headers: entityId, actionCode, entityName, kafka_messageKey
+          configuration:
+           max:
+            request:
+             size: 5242880
+      bindings:
+        inputHotelsChannel:
+          destination: inputHotelsChannel
+          group: bookingbl-group
+          content-type: application/json
+          binder: kafka
+      binders:
+        kafka:
+         type: kafka
+         environment:
+           spring:
+             cloud:
+               stream:
+                kafka:
+                  binder:
+                    brokers: localhost
+                    zkNodes: localhost
+logging:
+  config: classpath:log4j2.xml
